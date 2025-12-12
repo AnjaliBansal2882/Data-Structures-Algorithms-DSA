@@ -1,29 +1,22 @@
-class ClimbingStairsMemoization:
-    def climbStairs(self, n):
-        dp = [-1] * (n + 1)
-        return self.helper(n, dp)
+class FrogJumpMemoization:
 
-    def helper(self, n, dp):
-        if n == 0:
-            return 1
+    def frogJump(self, heights):
+        memo = [-1] * len(heights)
+        return self.helper(heights, len(heights) - 1, memo)
 
-        if n < 0:
+    def helper(self, heights, index, memo):
+
+        if index <= 0:
             return 0
 
-        # One step
-        if dp[n - 1] != -1:
-            oneStep = dp[n - 1]
-        else:
-            oneStep = self.helper(n - 1, dp)
+        if memo[index] != -1:
+            return memo[index]
 
-        # Two steps
-        if n >= 2:
-            if dp[n - 2] != -1:
-                twoStep = dp[n - 2]
-            else:
-                twoStep = self.helper(n - 2, dp)
-        else:
-            twoStep = 0
+        left = abs(heights[index] - heights[index - 1]) + self.helper(heights, index - 1, memo)
+        right = float('inf')
 
-        dp[n] = oneStep + twoStep
-        return dp[n]
+        if index >= 2:
+            right = abs(heights[index] - heights[index - 2]) + self.helper(heights, index - 2, memo)
+
+        memo[index] = min(left, right)
+        return memo[index]
